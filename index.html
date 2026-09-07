@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>랜딩 초안 만들기 · 스튜디오 온</title>
+<meta name="description" content="만들고 싶은 페이지를 한국어로 적어 주세요. 30초쯤 뒤에 초안이 나옵니다. 마음에 안 들면 고쳐 달라고 하면 됩니다.">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Honk palette */
+  --color-honk-blue:#008fff;
+  --color-signal-yellow:#ffe400;
+  --color-honk-white:#ffffff;
+  --color-carbon:#111111;
+  --color-slate:#363636;
+
+  /* Rendered canvas: honk blue deepened 4% on the same hue so signal-yellow
+     display words clear 3:1 and white body copy clears 4:1 on the field. */
+  --canvas:#0080e8;
+  --panel:var(--color-honk-white);
+  --ink-on-blue:var(--color-honk-white);
+  --ink-on-panel:var(--color-carbon);
+  --ink-on-panel-2:#4a4a4a;
+  --line-on-panel:#dcdcdc;
+
+  --font-honk-header:'Archivo Black','Pretendard','Apple SD Gothic Neo','Noto Sans KR',system-ui,sans-serif;
+  --font-honk-sans:'Pretendard','Inter','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',
+      -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+
+  --text-display:clamp(2.35rem,1.5rem + 2.6vw,3.25rem);
+  --text-h2:1.5rem;
+  --text-h3:1.0625rem;
+  --text-body-lg:1.1875rem;
+  --text-body:1rem;
+  --text-sm:.875rem;
+  --text-caption:.8125rem;
+
+  --spacing-8:8px; --spacing-14:14px; --spacing-16:16px;
+  --spacing-24:24px; --spacing-40:40px; --spacing-80:80px;
+
+  --radius-card:16px;
+  --radius-button:6px;
+  --radius-pill:6px;
+
+  --page-max:1200px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--ink-on-blue);
+     font-family:var(--font-honk-sans);font-size:var(--text-body);
+     line-height:1.55;-webkit-font-smoothing:antialiased;
+     word-break:keep-all;overflow-wrap:break-word}
+.pub{min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3,p{margin:0}
+a{color:var(--ink-on-blue);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--color-signal-yellow);outline-offset:3px;
+     border-radius:var(--radius-button);isolation:isolate;z-index:40}
+.wrap{max-width:var(--page-max);margin:0 auto;padding:0 var(--spacing-24);width:100%}
+.skip{position:absolute;left:var(--spacing-16);top:-72px;z-index:60;background:var(--panel);
+     color:var(--ink-on-panel);border:1px solid var(--color-carbon);
+     border-radius:var(--radius-button);padding:0 var(--spacing-16);
+     font-size:var(--text-sm);font-weight:600;min-height:44px;
+     display:inline-flex;align-items:center;transition:top .15s ease}
+.skip:focus{top:var(--spacing-16);text-decoration:none;isolation:isolate;z-index:60}
+
+/* 최소 상단 바 — 로고 왼쪽, 링크 오른쪽. sticky 없음 */
+.topbar{padding:var(--spacing-24) 0}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-16)}
+.eyebrow{font-family:var(--font-honk-header);font-size:var(--text-body-lg);font-weight:700;
+     letter-spacing:-.012em;color:var(--ink-on-blue)}
+.ghostlink{display:inline-flex;align-items:center;gap:var(--spacing-8);min-height:44px;
+     padding:0 var(--spacing-8);font-size:var(--text-sm);font-weight:500;
+     letter-spacing:-.024em;color:var(--ink-on-blue);background:none;border:0}
+.ghostlink:hover{text-decoration:underline}
+
+/* 히어로 — 왼쪽 카피, 오른쪽 프롬프트 작업판 */
+.hero{padding:var(--spacing-40) 0 var(--spacing-80)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,45fr) minmax(0,50fr);
+     gap:var(--spacing-80) var(--spacing-40);align-items:start}
+.vh-t{font-family:var(--font-honk-header);font-size:var(--text-display);font-weight:800;
+     letter-spacing:-.012em;line-height:1.23;color:var(--ink-on-blue);max-width:14ch}
+.vh-t .hl{color:var(--color-signal-yellow)}
+.hero-copy{min-width:0}
+.lede{max-width:34ch}
+.vh-s{margin-top:var(--spacing-24);font-size:var(--text-body-lg);line-height:1.55;
+     letter-spacing:-.006em;color:var(--ink-on-blue);max-width:34ch}
+
+/* 남은 횟수 알림 패널 — 흰 패널 위 carbon 텍스트 */
+.quota{display:flex;align-items:baseline;gap:6px;margin-top:var(--spacing-24);max-width:34ch;
+     padding:var(--spacing-16) var(--spacing-24);background:var(--panel);
+     border-radius:var(--radius-card);color:var(--ink-on-panel);
+     font-size:var(--text-body);font-weight:500;letter-spacing:-.018em}
+.quota b{font-size:var(--text-body-lg);font-weight:600;letter-spacing:-.006em}
+.quota .pin{margin-left:auto;align-self:center;width:20px;height:20px;flex:none;
+     color:var(--color-signal-yellow)}
+
+/* 프롬프트 작업판 — 히어로 오른쪽 흰 패널 */
+.ask{background:var(--panel);border-radius:var(--radius-card);
+     padding:var(--spacing-24);color:var(--ink-on-panel)}
+.field{display:block}
+label{display:block;font-size:var(--text-caption);font-weight:600;letter-spacing:-.026em;
+     color:var(--ink-on-panel);margin-bottom:var(--spacing-8)}
+.ask textarea{width:100%;min-height:132px;padding:var(--spacing-14) var(--spacing-16);
+     border:1px solid var(--line-on-panel);border-radius:var(--radius-button);
+     background:var(--panel);color:var(--ink-on-panel);font-family:var(--font-honk-sans);
+     font-size:var(--text-body);letter-spacing:-.018em;line-height:1.55;resize:vertical}
+.ask textarea::placeholder{color:#6b6b6b}
+.ask textarea:focus{outline:none;border-color:var(--color-carbon);isolation:isolate;z-index:1;
+     box-shadow:0 0 0 3px var(--color-signal-yellow)}
+.chips{display:flex;gap:var(--spacing-8);flex-wrap:wrap;margin-top:var(--spacing-14)}
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--spacing-14);
+     border:1px solid var(--line-on-panel);border-radius:var(--radius-pill);
+     background:var(--panel);font-family:var(--font-honk-sans);font-size:var(--text-caption);
+     font-weight:500;letter-spacing:-.026em;color:var(--ink-on-panel-2);cursor:pointer;
+     transition:border-color .12s ease,color .12s ease,transform .08s ease}
+.chip:hover{border-color:var(--color-carbon);color:var(--ink-on-panel)}
+.chip:active{transform:translateY(1px)}
+.chip[aria-pressed="true"]{border-color:var(--color-carbon);color:var(--ink-on-panel);
+     box-shadow:inset 0 -3px 0 var(--color-signal-yellow)}
+.row{display:flex;gap:var(--spacing-16);align-items:center;flex-wrap:wrap;
+     margin-top:var(--spacing-24)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--spacing-8);
+     min-height:48px;padding:0 var(--spacing-24);border-radius:var(--radius-button);
+     border:1px solid transparent;font-family:var(--font-honk-sans);font-size:var(--text-body);
+     font-weight:600;letter-spacing:-.018em;cursor:pointer;text-align:center;
+     transition:background .12s ease,transform .08s ease}
+.btn:hover{text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--color-carbon);color:var(--color-honk-white)}
+.btn-primary:hover{background:var(--color-slate)}
+.btn[disabled]{pointer-events:none;background:var(--color-slate)}
+.btn[disabled]::before{content:"";width:16px;height:16px;flex:none;border-radius:999px;
+     border:2px solid rgba(255,255,255,.35);border-top-color:var(--color-signal-yellow);
+     animation:hk-spin .8s linear infinite}
+.hint{font-size:var(--text-caption);letter-spacing:-.026em;color:var(--ink-on-panel-2);
+     line-height:1.55}
+.statusline{margin-top:var(--spacing-14);font-size:var(--text-caption);letter-spacing:-.026em;
+     color:var(--ink-on-panel);min-height:1.55em}
+.statusline:empty{margin-top:0}
+
+/* 예시 갤러리 */
+.section{padding-bottom:var(--spacing-80)}
+.card-title{font-family:var(--font-honk-header);font-size:var(--text-h2);font-weight:700;
+     letter-spacing:-.012em;color:var(--ink-on-blue);margin-bottom:var(--spacing-24)}
+.drafts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+     gap:var(--spacing-24)}
+.draft{display:block;background:var(--panel);border-radius:var(--radius-card);
+     overflow:hidden;color:var(--ink-on-panel);transition:transform .18s ease}
+.draft:hover{text-decoration:none;transform:translateY(-4px)}
+.draft-fig{aspect-ratio:16/10;position:relative;overflow:hidden;
+     background:linear-gradient(100deg,#ededed 30%,#f7f7f7 50%,#ededed 70%);
+     background-size:220% 100%;animation:hk-shimmer 1.6s linear infinite}
+.draft-ph{position:absolute;inset:0;display:flex;flex-direction:column;background:#f0f4f8;pointer-events:none}
+.draft-ph-bar{height:32px;background:#dce3ea}
+.draft-ph-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:9px}
+.draft-ph-line{height:9px;background:#dde6ef;border-radius:3px}
+.draft-ph-line:nth-child(1){width:78%}
+.draft-ph-line:nth-child(2){width:55%}
+.draft-ph-line:nth-child(3){width:40%;margin-top:4px}
+.draft-info{padding:var(--spacing-16) var(--spacing-24) var(--spacing-24)}
+.draft-info h3{font-size:var(--text-h3);font-weight:600;text-wrap:balance;letter-spacing:-.018em;
+     line-height:1.38;color:var(--ink-on-panel);margin-bottom:4px}
+.draft-meta{font-size:var(--text-caption);letter-spacing:-.026em;color:var(--ink-on-panel-2)}
+
+/* 푸터 — 평평한 링크 줄. 카드 그리드 없음 */
+.sitefoot{margin-top:auto;padding:var(--spacing-24) 0 var(--spacing-40)}
+.foot{font-size:var(--text-sm);font-weight:400;letter-spacing:-.024em;color:var(--ink-on-blue)}
+.foot a{text-decoration:underline}
+.to-top{display:inline-block;margin-top:var(--spacing-8);font-size:var(--text-caption);font-weight:700;
+  color:var(--color-signal-yellow);text-decoration:none;letter-spacing:.04em;text-transform:uppercase}
+.to-top:hover{text-decoration:underline}
+
+@keyframes hk-spin{to{transform:rotate(360deg)}}
+@keyframes hk-shimmer{to{background-position:-220% 0}}
+@keyframes hk-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.rise{animation:hk-rise .5s cubic-bezier(.22,.61,.36,1) both;
+     animation-delay:calc(var(--i,0) * 90ms)}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .draft:hover{transform:none}
+  .draft-fig{background:#ededed}
+}
+
+@media(max-width:920px){
+  .hero .wrap{grid-template-columns:1fr;gap:var(--spacing-40)}
+  .vh-t{max-width:20ch}
+  .vh-s{max-width:56ch}
+}
+@media(max-width:560px){
+  .hero{padding-bottom:var(--spacing-40)}
+  .section{padding-bottom:var(--spacing-40)}
+  .ask{padding:var(--spacing-16)}
+  .row .btn{width:100%}
+}
+</style></head><body class="pub"><a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<nav class="topbar" aria-label="주요">
+  <div class="wrap">
+    <p class="eyebrow">스튜디오 온</p>
+    <a class="ghostlink" href="#examples">예시 보기 →</a>
+  </div>
+</nav>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <h1 class="vh-t rise">한 줄만 적으면 <span class="hl">초안이</span> <span class="hl">나옵니다</span></h1>
+        <p class="lede vh-s rise" style="--i:1">만들고 싶은 페이지를 한국어로 적어 주세요. 30초쯤 뒤에 초안이 나옵니다. 마음에 안 들면 고쳐 달라고 하면 됩니다.</p>
+        <p class="quota rise" style="--i:2">남은 만들기 <b>3</b>회
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        </p>
+      </div>
+
+      <div class="ask rise" style="--i:3">
+        <form method="POST" action="https://jihotestspace02-vibe.mycafe24.ai/build" id="f">
+          <div class="field"><label for="q">무엇을 만들까요?</label>
+            <textarea id="q" name="prompt" required maxlength="600" rows="3"
+              placeholder="예: 동네 빵집 랜딩 페이지. 매일 아침 6시에 굽는다는 걸 강조하고 싶어."></textarea></div>
+          <div class="chips"><button class="chip" type="button" aria-pressed="false" data-q="동네 빵집 랜딩 페이지. 매일 아침 6시에 굽는다는 걸 강조하고 싶어.">동네 빵집 랜딩 페이지. 매일 아침 6시에 …</button><button class="chip" type="button" aria-pressed="false" data-q="요가 스튜디오 첫 수업 신청 페이지">요가 스튜디오 첫 수업 신청 페이지</button><button class="chip" type="button" aria-pressed="false" data-q="2인 디자인 스튜디오 소개 페이지">2인 디자인 스튜디오 소개 페이지</button><button class="chip" type="button" aria-pressed="false" data-q="프리랜서 명함 페이지. 링크 네 개랑 연락처.">프리랜서 명함 페이지. 링크 네 개랑 연락처…</button></div>
+          <div class="row">
+            <button class="btn btn-primary" type="submit" id="go">초안 만들기</button>
+            <span class="hint">40초에서 1분쯤 걸립니다. 창을 닫지 말고 기다려 주세요.</span>
+          </div>
+          <p class="statusline" id="status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="examples">
+    <div class="wrap">
+      <h2 class="card-title">이런 걸 만들 수 있습니다</h2>
+      <div class="drafts"><a class="draft" href="https://jihotestspace02-vibe.mycafe24.ai/p/3">
+        <div class="draft-fig"><div class="draft-ph" aria-hidden="true"><div class="draft-ph-bar"></div><div class="draft-ph-body"><div class="draft-ph-line"></div><div class="draft-ph-line"></div><div class="draft-ph-line"></div></div></div></div>
+        <div class="draft-info"><h3>이하늘 · 콘텐츠 기획</h3>
+          <div class="draft-meta">명함 페이지 · 버전 1개 · 예시</div></div>
+      </a><a class="draft" href="https://jihotestspace02-vibe.mycafe24.ai/p/1">
+        <div class="draft-fig"><div class="draft-ph" aria-hidden="true"><div class="draft-ph-bar"></div><div class="draft-ph-body"><div class="draft-ph-line"></div><div class="draft-ph-line"></div><div class="draft-ph-line"></div></div></div></div>
+        <div class="draft-info"><h3>작은 브랜드를 위한 촬영 스튜디오 — 하루빛</h3>
+          <div class="draft-meta">랜딩 페이지 · 버전 2개 · 예시</div></div>
+      </a><a class="draft" href="https://jihotestspace02-vibe.mycafe24.ai/p/2">
+        <div class="draft-fig"><div class="draft-ph" aria-hidden="true"><div class="draft-ph-bar"></div><div class="draft-ph-body"><div class="draft-ph-line"></div><div class="draft-ph-line"></div><div class="draft-ph-line"></div></div></div></div>
+        <div class="draft-info"><h3>우리가 일하는 방식 — 스튜디오 온</h3>
+          <div class="draft-meta">소개 페이지 · 버전 1개 · 예시</div></div>
+      </a></div>
+    </div>
+  </section>
+</main>
+
+<footer class="sitefoot">
+  <div class="wrap">
+    <p class="foot">스튜디오 온이 만든 도구입니다.
+       · <a href="mailto:hello@studioon.example.com">hello@studioon.example.com</a></p>
+    <a class="to-top" href="#main">맨 위로 ↑</a>
+  </div>
+</footer>
+<script>
+/* 예시 칩을 누르면 입력창을 채운다. 없어도 직접 적으면 그대로 동작한다. */
+(function(){
+  var q=document.getElementById('q'),f=document.getElementById('f'),go=document.getElementById('go');
+  document.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click',function(){q.value=c.getAttribute('data-q');q.focus();});
+  });
+  if(f) f.addEventListener('submit',function(){
+    go.disabled=true;go.textContent='만들고 있습니다…';
+  });
+})();
+</script>
+<script>
+/* 선택 상태와 진행 안내를 화면 낭독기에도 전달한다. 위 동작에는 손대지 않는다. */
+(function(){
+  var chips=document.querySelectorAll('.chip'),f=document.getElementById('f'),
+      st=document.getElementById('status');
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      chips.forEach(function(o){o.setAttribute('aria-pressed','false');});
+      c.setAttribute('aria-pressed','true');
+    });
+  });
+  if(f&&st) f.addEventListener('submit',function(){
+    st.textContent='초안을 만들고 있습니다. 40초에서 1분쯤 걸립니다.';
+  });
+})();
+</script></body></html>
